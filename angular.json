@@ -74,6 +74,10 @@
               "browserTarget": "AngularApp2:build:development"
             }
           },
+          "options": {
+            "browserTarget": "AngularApp2:build",
+            "proxyConfig": "src/proxy.conf.json"
+          },
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
