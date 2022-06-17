@@ -19,4 +19,23 @@
       <div>attach_file</div>
     </button>
   </div>
+  <form [formGroup] = "classForm"
+    (ngSubmit) = "onFormSubmit(classForm.value)">
+      <table>
+        <tr>
+          <td class = "tbl1">
+            <input formControlName = "ClassName" matTooltip = "Enter Class Name" matInput placeholder = "Class Name">
+          </td>
+          <td class = "tbl1">
+            <input formControlName = "ClassPreReqs" matTooltip = "Enter Class Prerequisites separated by commas" matInput placeholder = "Class Prerequisite1,Class Prerequisite2,...">
+          </td>
+        </tr>
+        <tr>
+          <td  class="content-center">  
+            <button type="submit" mat-raised-button color="accent"matTooltip="Click Submit Button"[disabled]="!classForm.valid">Submit</button>      
+            <button type="reset" mat-raised-button color="accent"matTooltip="Click Reset Button" (click)="resetForm()">Reset</button>  
+          </td>  
+        </tr>
+      </table>
+  </form>
 </body>
