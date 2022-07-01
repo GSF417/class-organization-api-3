@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEventType, HttpErrorResponse, HttpProgressEvent, HttpEvent } from '@angular/common/http';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs';  
 import { ClassService } from '../_services/class.service'; 
 import { CUnitComponent } from '../cunit/cunit.component'; 
 import { curricular_unit } from '../class';
-import { FormBuilder } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-classes',
@@ -12,69 +12,66 @@ import { FormBuilder } from '@angular/forms';
   styleUrls: ['./classes.component.css'],
 })
 export class ClassesComponent implements OnInit {
-  fileName = '';
-  dataSaved = false;
-  cunitIdUpdate = null;  
-  allCUnits: Observable<curricular_unit[]>;  
-  classForm: any;
-
-  constructor(private http: HttpClient, private formbuilder: FormBuilder, private classService: ClassService) {}
-
+  isCreate: boolean = false;
+  progress: number = 0;
+  message: string = "";
+  response: string = "";
+  cunit!: curricular_unit;
+  name: string = "";
+  prereq: string = "";
+  classes: curricular_unit[] = [];
+  @Output() public onUploadFinished = new EventEmitter();
+  
+  constructor(private http: HttpClient) { }
   ngOnInit() {
-    this.classForm = this.formbuilder.group ({
-      ClassName: [''],
-      ClassPreReqs: ['']
-    });
-    this.loadAllCUnits();
+  }
+  uploadFile = (files: FileList | null = null) => {
+    if (files != null) {
+      if (files.length === 0) {
+        return;
+      }
+      let fileToUpload = <File>files[0];
+      const formData = new FormData();
+      formData.append('file', fileToUpload, fileToUpload.name);
+      
+      this.http.post('https://localhost:4200/api/classes', formData, {reportProgress: true, observe: 'events'})
+        .subscribe({
+          next: (event) => {
+          if (event.type === HttpEventType.UploadProgress)
+            this.progress = Math.round(100 * event.loaded / (event.total || 100));
+          else if (event.type === HttpEventType.Response) {
+            this.message = 'Upload success.';
+            this.onUploadFinished.emit(event.body);
+          }
+        },
+        error: (err: HttpErrorResponse) => console.log(err)
+      });
+    }
+  }
+  uploadFinished = (event: HttpErrorResponse) => { 
+    this.response = event.message; 
   }
 
-  onFileSelected(event: any)  {
-    const file: File = event.target.files[0];
+  private getClassess = () => {
+    this.http.get('https://localhost:4200/api/classes')
+    .subscribe({
+      next: (res) => this.classes = res as curricular_unit[],
+      error: (err: HttpErrorResponse) => console.log(err)
+    });
+  }
 
-    if (file) {
-      this.fileName = file.name;
-
-      const formData = new FormData();
-
-      formData.append('thumbnail', file);
-
-      const upload$ = this.http.post('/api/thumbnail-upload', formData);
-
-      upload$.subscribe();
+  onCreate = () => {
+    this.cunit = {
+      Curr_Id: "0",
+      Curr_Name: this.name,
+      Curr_Prerequisites: this.prereq
     }
   }
 
-  onFormSubmit() {
-    const c_unit = this.classForm.value;
-
+  returnToCreate = () => {
+    this.isCreate = true;
+    this.name = '';
+    this.prereq = '';
   }
-
-  loadAllCUnits() {  
-    this.allCUnits = this.classService.getAllCUnits();  
-  }  
-
-  CreateEmployee(cunit: curricular_unit) {  
-    if (this.cunitIdUpdate == null) {  
-      this.classService.createCUnit(cunit).subscribe(  
-        () => {  
-          this.dataSaved = true;  
-          this.loadAllCUnits();  
-          this.cunitIdUpdate = null;  
-          this.classForm.reset();  
-        }  
-      );  
-    } else {  
-      cunit.Curr_Id = this.cunitIdUpdate;  
-      this.classService.updateCUnit(cunit).subscribe(() => {  
-        this.dataSaved = true;  
-        this.loadAllCUnits();  
-        this.cunitIdUpdate = null;  
-        this.classForm.reset();  
-      });  
-    }  
-  }   
-
-  resetForm() {  
-    this.classForm.reset();  
-  }  
 }
+/* https://code-maze.com/upload-files-dot-net-core-angular/ */

@@ -1,41 +1,58 @@
-<header>Classes Page</header>
-<body >
-  <input
-    type="file"
-    class="file-input"
-    (change)="onFileSelected($event)"
-    #fileUpload
-  />
+<article class="container">
+  <section class="create" *ngIf="isCreate">
+    <h1>Add Class</h1>
+    <form>
+      <div class="mb-3">
+        <label for="name">Class Name</label>
+        <input type="text" class="form-control" id="name" name="name" 
+        placeholder="Enter class name" ngModel="name">
+      </div>
+      <div class="mb-3">
+        <label for="prereq">Pre Requisites</label>
+        <input type="text" class="form-control" id="prereq" name="prereq" 
+        placeholder="Enter pre requisites" ngModel="prereq">
+      </div>
+      <div class="row">
+        <div class="offset-md-5 col-md-2">
+          <button type="button" class="btn btn-primary" (click)="onCreate()">Create </button>
+        </div>
+      </div>
+    </form>
+  </section>
 
-  <div class="file-upload">
-    {{ fileName || 'No file uploaded yet.' }}
-
-    <button
-      mat-mini-fab
-      color="primary"
-      class="upload-btn"
-      (click)="fileUpload.click()"
-    >
-      <div>attach_file</div>
-    </button>
-  </div>
-  <form [formGroup] = "classForm"
-    (ngSubmit) = "onFormSubmit(classForm.value)">
-      <table>
+  <section class="cunits" *ngIf="!isCreate">
+    <table class="table table-striped">
+      <thead>
         <tr>
-          <td class = "tbl1">
-            <input formControlName = "ClassName" matTooltip = "Enter Class Name" matInput placeholder = "Class Name">
-          </td>
-          <td class = "tbl1">
-            <input formControlName = "ClassPreReqs" matTooltip = "Enter Class Prerequisites separated by commas" matInput placeholder = "Class Prerequisite1,Class Prerequisite2,...">
-          </td>
+          <th scope="col">Name</th>
+          <th scope="col">Pre Requisites</th>
         </tr>
-        <tr>
-          <td  class="content-center">  
-            <button type="submit" mat-raised-button color="accent"matTooltip="Click Submit Button"[disabled]="!classForm.valid">Submit</button>      
-            <button type="reset" mat-raised-button color="accent"matTooltip="Click Reset Button" (click)="resetForm()">Reset</button>  
-          </td>  
+      </thead>
+      <tbody>
+        <tr *ngFor="let cunit of cunits">
+          <td>{{cunit.name}}</td>
+          <td>{{cunit.prereq}}</td>
         </tr>
-      </table>
-  </form>
-</body>
+      </tbody>
+    </table>
+    <div class="row" style="margin-bottom:15px;">
+      <div class="col-md-3">
+        <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files)" style="display:none;">
+        <button type="button" class="btn btn-success" (click)="file.click()">Upload File</button>
+      </div>
+      <div class="col-md-4">
+        <span class="upload" *ngIf="progress > 0">
+          {{progress}}%
+        </span>
+        <span class="upload" *ngIf="message">
+          {{message}}
+        </span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="offset-md-10 col-md-2">
+        <button type="button" class="btn btn-primary" (click)="returnToCreate()">New Curricular Unit</button>
+      </div>
+    </div>
+  </section>
+</article>
