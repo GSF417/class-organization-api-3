@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "b9eyrYClVLecqEqvPnGMZpaYBHXU3pGHAVeCWjJXbsuRz5Qo+qr82vk4+RtD6BRyDZenygDJ02zu8CTKLR6ZOw==",
+  "dgSpecHash": "CXKIOqSvrqTCKZT+qt6LnQJfrgJ6xKHL4fdygWB0/7zPWDzPBDQEUb0WPZmlkpDC2DxjQSqclOdFM8KbE/Y3jQ==",
   "success": true,
-  "projectFilePath": "/home/leoenne/Área de Trabalho/Projeto_Engenharia_de_Computação/Todo/Todo.csproj",
+  "projectFilePath": "/home/leoenne/Música/Projeto_Engenharia_de_Computação/Todo/Todo.csproj",
   "expectedPackageFiles": [
     "/home/leoenne/.nuget/packages/humanizer.core/2.8.26/humanizer.core.2.8.26.nupkg.sha512",
     "/home/leoenne/.nuget/packages/microsoft.csharp/4.7.0/microsoft.csharp.4.7.0.nupkg.sha512",

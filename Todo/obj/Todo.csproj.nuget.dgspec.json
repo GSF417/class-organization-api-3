@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/leoenne/Área de Trabalho/Projeto_Engenharia_de_Computação/Todo/Todo.csproj": {}
+    "/home/leoenne/Música/Projeto_Engenharia_de_Computação/Todo/Todo.csproj": {}
   },
   "projects": {
-    "/home/leoenne/Área de Trabalho/Projeto_Engenharia_de_Computação/Todo/Todo.csproj": {
+    "/home/leoenne/Música/Projeto_Engenharia_de_Computação/Todo/Todo.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/leoenne/Área de Trabalho/Projeto_Engenharia_de_Computação/Todo/Todo.csproj",
+        "projectUniqueName": "/home/leoenne/Música/Projeto_Engenharia_de_Computação/Todo/Todo.csproj",
         "projectName": "Todo",
-        "projectPath": "/home/leoenne/Área de Trabalho/Projeto_Engenharia_de_Computação/Todo/Todo.csproj",
+        "projectPath": "/home/leoenne/Música/Projeto_Engenharia_de_Computação/Todo/Todo.csproj",
         "packagesPath": "/home/leoenne/.nuget/packages/",
-        "outputPath": "/home/leoenne/Área de Trabalho/Projeto_Engenharia_de_Computação/Todo/obj/",
+        "outputPath": "/home/leoenne/Música/Projeto_Engenharia_de_Computação/Todo/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/leoenne/.nuget/NuGet/NuGet.Config"

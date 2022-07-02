@@ -14,7 +14,7 @@ namespace Todo.Controllers
         //     =>Ok(context.TodoUsers.ToList());
 
         // User sign in
-        [HttpGet("/signin")] //sign in user 
+        [HttpGet("/signin")] 
         public IActionResult Get([FromBody] LoginUser loginUser,[FromServices] AppDbContext context)
         {
             var user = context.TodoUsers.FirstOrDefault(x=> x.Email ==loginUser.Email);
@@ -56,13 +56,14 @@ namespace Todo.Controllers
         {
             var model = context.TodoUsers.FirstOrDefault(x=> x.Id == id);
             if (model == null)
-                return NotFound();
+                return NotFound("Não existe esse usuário");
             
             model.Name = user.Name;
             model.Email = user.Email;
             model.Password = user.Password;
+            //model.UCs=null;
             context.SaveChanges();
-            return Ok(model);
+            return Ok("Atualizado com sucesso");
         
 
         }
@@ -75,7 +76,7 @@ namespace Todo.Controllers
         {
             var user = context.TodoUsers.FirstOrDefault(x=> x.Id == id);
             if (user == null)
-                return NotFound();
+                return NotFound("Não existe esse usuário");
             
             context.TodoUsers.Remove(user);
             context.SaveChanges();
@@ -83,21 +84,25 @@ namespace Todo.Controllers
 
         }
 
-        [HttpPost("/File/{id:int}")] // Read the subjects that passed
+        //Save Ucs of pdf
+        [HttpPost("/File/{id:int}")]
         public IActionResult UploadFile(
             [FromRoute] int id,
             [FromForm] IFormFile file, 
             [FromServices] AppDbContext context)
         {
+            var user = context.TodoUsers.FirstOrDefault(x=> x.Id == id);
+            if (user == null)
+                return NotFound("Não existe esse usuário");
             
             if (file.Length > 0) {
-                string filePath = $"/home/leoenne/Área de Trabalho/Projeto_Engenharia_de_Computação/Todo/{file.FileName}";
+                string filePath = $"/home/leoenne/Música/Projeto_Engenharia_de_Computação/Todo/{file.FileName}";
                 using (Stream fileStream = new FileStream(filePath, FileMode.Create)) {
                     file.CopyTo(fileStream);
                 }
             }
 
-            var cmd = "/home/leoenne/Vídeos/testefinal/ReadPDf.py";
+            var cmd = "/home/leoenne/Música/Projeto_Engenharia_de_Computação/Todo/ReadPDf.py";
             var args = file.FileName;
 
             ProcessStartInfo start = new ProcessStartInfo();
@@ -110,14 +115,18 @@ namespace Todo.Controllers
                 using(StreamReader reader = process.StandardOutput)
                 {
                     string result = reader.ReadToEnd();
-                    var ucs = result.Split("\n").ToList();
-                    return Ok(ucs);
+                    char finalChar = '\n';
+                    string finalUcs = result.TrimEnd(finalChar);
+                    user.UCs = finalUcs;
+                    context.SaveChanges();
+                    return Ok("Matérias adicionadas");
                 }
             }
-
-            return Ok("Deu ruim");
+        
         }
 
+
+        // Add Ucs manually
         [HttpPost("/UC/{id:int}")] // Read the subjects that passed
         public IActionResult UploadUc(
             [FromRoute] int id,
@@ -126,7 +135,7 @@ namespace Todo.Controllers
         {
             var model = context.TodoUsers.FirstOrDefault(x=> x.Id == id);
             if (model == null)
-                return NotFound();
+                return NotFound("Não existe esse usuário");
             
             if(model.UCs == null)
             {
@@ -148,13 +157,14 @@ namespace Todo.Controllers
             return Ok("Máteria adicionada");
         }
 
+        // Get Ucs of user
         [HttpGet("/{id:int}")]
         public IActionResult GetById([FromRoute] int id,
         [FromServices] AppDbContext context)
         {
             var user = context.TodoUsers.FirstOrDefault(x=> x.Id == id);
             if (user == null)
-                return NotFound();
+                return NotFound("Não existe esse usuário");
 
             if(user.UCs == null)
                 return Ok("Não tem Ucs");
