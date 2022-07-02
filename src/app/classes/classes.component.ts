@@ -5,6 +5,9 @@ import { ClassService } from '../_services/class.service';
 import { CUnitComponent } from '../cunit/cunit.component'; 
 import { curricular_unit } from '../class';
 import { FormsModule } from '@angular/forms';
+import { TokenStorageService } from '../_services/token-storage.service';
+
+const API_HOST = 'http://localhost:7275/';
 
 @Component({
   selector: 'app-classes',
@@ -20,9 +23,11 @@ export class ClassesComponent implements OnInit {
   name: string = "";
   prereq: string = "";
   classes: curricular_unit[] = [];
+  user_id: number = 0;
   @Output() public onUploadFinished = new EventEmitter();
   
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private tokenStorage: TokenStorageService) { 
+  }
   ngOnInit() {
   }
   uploadFile = (files: FileList | null = null) => {
@@ -30,11 +35,12 @@ export class ClassesComponent implements OnInit {
       if (files.length === 0) {
         return;
       }
+      this.user_id = this.tokenStorage.getUser();
       let fileToUpload = <File>files[0];
       const formData = new FormData();
       formData.append('file', fileToUpload, fileToUpload.name);
       
-      this.http.post('https://localhost:4200/api/classes', formData, {reportProgress: true, observe: 'events'})
+      this.http.post(API_HOST+'/UC/'+this.user_id, formData, {reportProgress: true, observe: 'events'})
         .subscribe({
           next: (event) => {
           if (event.type === HttpEventType.UploadProgress)
@@ -52,8 +58,9 @@ export class ClassesComponent implements OnInit {
     this.response = event.message; 
   }
 
-  private getClassess = () => {
-    this.http.get('https://localhost:4200/api/classes')
+  private getClasses = () => {
+    this.user_id = this.tokenStorage.getUser();
+    this.http.get(API_HOST+'/'+this.user_id)
     .subscribe({
       next: (res) => this.classes = res as curricular_unit[],
       error: (err: HttpErrorResponse) => console.log(err)
@@ -62,9 +69,7 @@ export class ClassesComponent implements OnInit {
 
   onCreate = () => {
     this.cunit = {
-      Curr_Id: "0",
       Curr_Name: this.name,
-      Curr_Prerequisites: this.prereq
     }
   }
 

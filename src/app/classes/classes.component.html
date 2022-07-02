@@ -7,11 +7,6 @@
         <input type="text" class="form-control" id="name" name="name" 
         placeholder="Enter class name" ngModel="name">
       </div>
-      <div class="mb-3">
-        <label for="prereq">Pre Requisites</label>
-        <input type="text" class="form-control" id="prereq" name="prereq" 
-        placeholder="Enter pre requisites" ngModel="prereq">
-      </div>
       <div class="row">
         <div class="offset-md-5 col-md-2">
           <button type="button" class="btn btn-primary" (click)="onCreate()">Create </button>
@@ -25,13 +20,11 @@
       <thead>
         <tr>
           <th scope="col">Name</th>
-          <th scope="col">Pre Requisites</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let cunit of cunits">
           <td>{{cunit.name}}</td>
-          <td>{{cunit.prereq}}</td>
         </tr>
       </tbody>
     </table>
