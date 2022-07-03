@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { curricular_unit } from '../class';
+import { curricular_unit } from '../class.model';
 
-const API_URL = 'http://localhost:4200/';
+const API_URL = 'https://localhost:7275/';
 const httpOptions = {
   headers: new HttpHeaders({ ContentType: 'application/json' }),
 };

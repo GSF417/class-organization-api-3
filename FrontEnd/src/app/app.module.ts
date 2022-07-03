@@ -14,6 +14,7 @@ import { BoardUserComponent } from './board-user/board-user.component';
 import { ClassesComponent } from './classes/classes.component';
 import { authInterceptorProviders } from './_helpers/auth.interceptor';
 import { ReactiveFormsModule } from '@angular/forms';
+import { CUnitComponent } from './cunit/cunit.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -24,6 +25,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     BoardAdminComponent,
     BoardModeratorComponent,
     BoardUserComponent,
+    ClassesComponent,
+    CUnitComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule, HttpClientModule, ReactiveFormsModule],
   providers: [authInterceptorProviders],

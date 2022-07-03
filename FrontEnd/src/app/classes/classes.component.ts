@@ -3,11 +3,11 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs';  
 import { ClassService } from '../_services/class.service'; 
 import { CUnitComponent } from '../cunit/cunit.component'; 
-import { curricular_unit } from '../class';
+import { curricular_unit } from '../class.model';
 import { FormsModule } from '@angular/forms';
 import { TokenStorageService } from '../_services/token-storage.service';
 
-const API_HOST = 'http://localhost:7275/';
+const API_HOST = 'https://localhost:7275/';
 
 @Component({
   selector: 'app-classes',
