@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { curricular_unit } from '../class';
+import { curricular_unit } from '../class.model';
 
 const API_URL = 'http://localhost:4200/';
 const httpOptions = {

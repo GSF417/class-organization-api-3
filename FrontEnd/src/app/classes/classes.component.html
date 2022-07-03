@@ -1,4 +1,5 @@
 <article class="container">
+  dsoadasidm
   <section class="create" *ngIf="isCreate">
     <h1>Add Class</h1>
     <form>
@@ -15,7 +16,7 @@
     </form>
   </section>
 
-  <section class="cunits" *ngIf="!isCreate">
+  <section class="classes" *ngIf="!isCreate">
     <table class="table table-striped">
       <thead>
         <tr>
@@ -23,8 +24,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let cunit of cunits">
-          <td>{{cunit.name}}</td>
+        <tr *ngFor="let classes of classes">
+          <td>{{classes.Curr_Name}}</td>
         </tr>
       </tbody>
     </table>
