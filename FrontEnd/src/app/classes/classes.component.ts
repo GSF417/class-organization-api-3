@@ -7,7 +7,7 @@ import { curricular_unit } from '../class.model';
 import { FormsModule } from '@angular/forms';
 import { TokenStorageService } from '../_services/token-storage.service';
 
-const API_HOST = 'http://localhost:7275/';
+const API_HOST = 'https://localhost:7275/';
 
 @Component({
   selector: 'app-classes',
