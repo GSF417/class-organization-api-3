@@ -29,7 +29,7 @@ namespace Todo.Controllers
         }
 
         // Create a user
-        [HttpPost("/")]  
+        [HttpPost("/signup")]  
         public IActionResult Post(
             [FromBody] TodoUser user, 
             [FromServices] AppDbContext context)
