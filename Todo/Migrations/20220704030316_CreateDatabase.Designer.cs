@@ -8,7 +8,7 @@ using Todo.Data;
 namespace Todo.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220702162649_CreateDatabase")]
+    [Migration("20220704030316_CreateDatabase")]
     partial class CreateDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

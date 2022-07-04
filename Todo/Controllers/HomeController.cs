@@ -61,7 +61,6 @@ namespace Todo.Controllers
             model.Name = user.Name;
             model.Email = user.Email;
             model.Password = user.Password;
-            //model.UCs=null;
             context.SaveChanges();
             return Ok("Atualizado com sucesso");
         
@@ -84,7 +83,7 @@ namespace Todo.Controllers
 
         }
 
-        //Save Ucs of pdf
+        //add Ucs of a pdf
         [HttpPost("/File/{id:int}")]
         public IActionResult UploadFile(
             [FromRoute] int id,
