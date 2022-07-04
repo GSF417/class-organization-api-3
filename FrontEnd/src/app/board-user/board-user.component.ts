@@ -10,6 +10,7 @@ export class BoardUserComponent implements OnInit {
   content?: string = 'Classes Completed: link Classes Suggested: link';
   constructor(private userService: UserService) {}
   ngOnInit(): void {
+    /*
     this.userService.getUserBoard().subscribe(
       (data) => {
         this.content = data;
@@ -18,5 +19,6 @@ export class BoardUserComponent implements OnInit {
         this.content = JSON.parse(err.error).message;
       }
     );
+    */
   }
 }
