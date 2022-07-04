@@ -8,24 +8,24 @@
       novalidate
     >
       <div class="form-group">
-        <label for="username">Username</label>
+        <label for="name">name</label>
         <input
           type="text"
           class="form-control"
-          name="username"
-          [(ngModel)]="form.username"
+          name="name"
+          [(ngModel)]="form.name"
           required
           minlength="3"
           maxlength="20"
-          #username="ngModel"
+          #name="ngModel"
         />
-        <div class="alert-danger" *ngIf="username.errors && f.submitted">
-          <div *ngIf="username.errors['required']">Username is required</div>
-          <div *ngIf="username.errors['minlength']">
-            Username must be at least 3 characters
+        <div class="alert-danger" *ngIf="name.errors && f.submitted">
+          <div *ngIf="name.errors['required']">name is required</div>
+          <div *ngIf="name.errors['minlength']">
+            name must be at least 3 characters
           </div>
-          <div *ngIf="username.errors['maxlength']">
-            Username must be at most 20 characters
+          <div *ngIf="name.errors['maxlength']">
+            name must be at most 20 characters
           </div>
         </div>
       </div>

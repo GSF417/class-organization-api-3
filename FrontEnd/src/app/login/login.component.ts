@@ -27,6 +27,7 @@ export class LoginComponent implements OnInit {
   }
   onSubmit(): void {
     const { email, password } = this.form;
+    console.log(this.form);
     this.authService.login(email, password).subscribe({
         next: (data) => {
           console.log(data);

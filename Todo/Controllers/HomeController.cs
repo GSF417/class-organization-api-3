@@ -9,12 +9,12 @@ namespace Todo.Controllers
     [ApiController]
     public class HomeController : ControllerBase
     {
-        // [HttpGet("/")]
-        // public IActionResult Get([FromServices] AppDbContext context) 
-        //     =>Ok(context.TodoUsers.ToList());
+        [HttpGet("/teste")]
+        public IActionResult Get([FromServices] AppDbContext context) 
+            =>Ok(context.TodoUsers.ToList());
 
         // User sign in
-        [HttpGet("/signin")] 
+        [HttpPost("/signin")]//[HttpGet("/signin")] 
         public IActionResult Get([FromBody] LoginUser loginUser,[FromServices] AppDbContext context)
         {
             var user = context.TodoUsers.FirstOrDefault(x=> x.Email ==loginUser.Email);
