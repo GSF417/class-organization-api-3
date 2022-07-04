@@ -129,7 +129,7 @@ namespace Todo.Controllers
         [HttpPost("/UC/{id:int}")] // Read the subjects that passed
         public IActionResult UploadUc(
             [FromRoute] int id,
-            [FromBody] string uc, 
+            [FromBody] UcUpload nameUc, 
             [FromServices] AppDbContext context)
         {
             var model = context.TodoUsers.FirstOrDefault(x=> x.Id == id);
@@ -138,7 +138,7 @@ namespace Todo.Controllers
             
             if(model.UCs == null)
             {
-                model.UCs = uc;
+                model.UCs = nameUc.UC;
                 context.SaveChanges();
                 return Ok("Máteria adicionada");
 
@@ -146,10 +146,10 @@ namespace Todo.Controllers
             
             var ucs = model.UCs.Split("\n").ToList();
 
-            if(ucs.IndexOf(uc) != -1)
+            if(ucs.IndexOf(nameUc.UC) != -1)
                 return BadRequest("Já existe essa Uc");
             else
-                model.UCs = model.UCs + "\n" + uc;
+                model.UCs = model.UCs + "\n" + $"{nameUc.UC}";
 
             context.SaveChanges();
 

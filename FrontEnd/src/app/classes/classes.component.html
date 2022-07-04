@@ -5,7 +5,21 @@
       <div class="mb-3">
         <label for="name">Class Name</label>
         <input type="text" class="form-control" id="name" name="name" 
-        placeholder="Enter class name" ngModel="name">
+        placeholder="Enter class name" [(ngModel)]="name">
+      </div>
+      <div class="row" style="margin-bottom:15px;">
+        <div class="col-md-3">
+          <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files)" style="display:none;">
+          <button type="button" class="btn btn-success" (click)="file.click()">Upload File</button>
+        </div>
+        <div class="col-md-4">
+          <span class="upload" *ngIf="progress > 0">
+            {{progress}}%
+          </span>
+          <span class="upload" *ngIf="message">
+            {{message}}
+          </span>
+        </div>
       </div>
       <div class="row">
         <div class="offset-md-5 col-md-2">
@@ -24,24 +38,10 @@
       </thead>
       <tbody>
         <tr *ngFor="let classes of classes">
-          <td>{{classes.Curr_Name}}</td>
+          <td>{{classes.UC}}</td>
         </tr>
       </tbody>
     </table>
-    <div class="row" style="margin-bottom:15px;">
-      <div class="col-md-3">
-        <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files)" style="display:none;">
-        <button type="button" class="btn btn-success" (click)="file.click()">Upload File</button>
-      </div>
-      <div class="col-md-4">
-        <span class="upload" *ngIf="progress > 0">
-          {{progress}}%
-        </span>
-        <span class="upload" *ngIf="message">
-          {{message}}
-        </span>
-      </div>
-    </div>
     <div class="row">
       <div class="offset-md-10 col-md-2">
         <button type="button" class="btn btn-primary" (click)="returnToCreate()">New Curricular Unit</button>
