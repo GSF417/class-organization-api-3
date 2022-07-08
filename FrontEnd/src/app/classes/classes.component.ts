@@ -6,6 +6,7 @@ import { CUnitComponent } from '../cunit/cunit.component';
 import { curricular_unit } from '../class.model';
 import { FormsModule } from '@angular/forms';
 import { TokenStorageService } from '../_services/token-storage.service';
+import { tokenize } from '@angular/compiler/src/ml_parser/lexer';
 
 const API_HOST = 'https://localhost:7275/';
 const httpOptions = {
@@ -25,13 +26,14 @@ export class ClassesComponent implements OnInit {
   cunit!: curricular_unit;
   name: string = "";
   prereq: string = "";
-  classes: curricular_unit[] = [];
+  classes: string[] = [];
   user_id!: string;
   @Output() public onUploadFinished = new EventEmitter();
   
   constructor(private http: HttpClient, private tokenStorage: TokenStorageService) { 
   }
   ngOnInit() {
+    this.getClasses();
   }
   uploadFile = (files: FileList | null = null) => {
     if (files != null) {
@@ -70,7 +72,9 @@ export class ClassesComponent implements OnInit {
       this.user_id = token;
       this.http.get(API_HOST+this.user_id)
       .subscribe({
-        next: (res) => this.classes = res as curricular_unit[],
+        next: (res) => {
+          this.classes = res as string[];
+        },
         error: (err: HttpErrorResponse) => console.log(err)
       });
     }
@@ -84,10 +88,9 @@ export class ClassesComponent implements OnInit {
     const token = this.tokenStorage.getToken();
       if (token != null) {
         this.user_id = token;
-        this.http.post(API_HOST+'UC/'+this.user_id, this.cunit, httpOptions).subscribe({
-          next: data => {
-            /*this.getClasses();*/
-            console.log(data);
+        this.http.post(API_HOST+'UC/'+this.user_id, this.cunit, {responseType: 'text'}).subscribe({
+          next: _ => {
+            this.getClasses();
             this.isCreate = false;
           },
           error: (err: HttpErrorResponse) => console.log(err)
