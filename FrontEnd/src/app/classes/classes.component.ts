@@ -4,9 +4,11 @@ import { Observable } from 'rxjs';
 import { ClassService } from '../_services/class.service'; 
 import { CUnitComponent } from '../cunit/cunit.component'; 
 import { curricular_unit } from '../class.model';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule } from '@angular/forms';
 import { TokenStorageService } from '../_services/token-storage.service';
 import { tokenize } from '@angular/compiler/src/ml_parser/lexer';
+import { Validators } from '@angular/forms';
+import { ECOMP } from '../courses.model';
 
 const API_HOST = 'https://localhost:7275/';
 const httpOptions = {
@@ -28,9 +30,13 @@ export class ClassesComponent implements OnInit {
   prereq: string = "";
   classes: string[] = [];
   user_id!: string;
+  courseForm = this.fb.group({
+    specific_course: ['ECOMP', [Validators.required]],
+  });
+  currentCourse: string = "";
   @Output() public onUploadFinished = new EventEmitter();
   
-  constructor(private http: HttpClient, private tokenStorage: TokenStorageService) { 
+  constructor(private http: HttpClient, private tokenStorage: TokenStorageService, public fb: FormBuilder) { 
   }
   ngOnInit() {
     this.getClasses();
@@ -102,6 +108,62 @@ export class ClassesComponent implements OnInit {
     this.isCreate = true;
     this.name = '';
     this.prereq = '';
+  }
+
+  updateCourse (e: any) {
+    this.specific_course?.setValue(e.target.value, {
+      onlySelf: true,
+    });
+  }
+
+  get specific_course() {
+    return this.courseForm.get('specific_course');
+  }
+
+  submitCourse(): void {
+    this.currentCourse = this.specific_course?.value.stringify;
+  }
+
+  courseDone(course: string) {
+    var i: number;
+    for (i = 0; i < this.classes.length; i++) {
+      if (this.classes[i] === course) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  coursePossible(course: string) {
+    var i: number;
+    var j: number;
+    var prereqs: string[] = ["", "", ""];
+    var possible: boolean = true;
+    var found: boolean[] = [false, false, false];
+    if (this.currentCourse === 'ECOMP') {
+      for (i = 0; i < ECOMP.length; i++) {
+        if (ECOMP[i].name == course) {
+          prereqs = ECOMP[i].prereqs;
+          break;
+        }
+      }
+    }
+    for (i = 0; i < this.classes.length; i++) {
+      for (j = 0; j < 3; j++) {
+        if (this.classes[i] === prereqs[j]) {
+          found[j] = true;
+        }
+      }
+    }
+    for (i = 0; i < 3; i++) {
+      if (found[i] != true) {
+        possible = false;
+      }
+    }
+    if (possible) {
+      return true;
+    }
+    return false;
   }
 }
 /* https://code-maze.com/upload-files-dot-net-core-angular/ */
