@@ -1,2 +1,29 @@
-/* You can add global styles to this file, and also import other style files */
-@import '~bootstrap/dist/css/bootstrap.min.css';
+.nav-link {
+    padding: 10px;
+    margin: 0 10px;
+    color: white;
+    text-decoration: none;
+
+    transition: .5s;
+    background-color: #165c25;
+
+    border: 1px solid #165c25;
+    border-radius: 8px;
+
+}
+
+.nav-link:hover{
+    color: #FFF;
+    background-color: #0b3113;
+}
+
+.navbar {
+    background: rgb(187, 187, 187);
+    margin-bottom: 20px;
+    border-bottom: 3px solid rgb(136, 136, 136);
+}
+
+.background{
+    height:964px;
+    background-image: linear-gradient(to bottom right, rgb(18, 59, 24), rgb(164, 219, 93));
+}
