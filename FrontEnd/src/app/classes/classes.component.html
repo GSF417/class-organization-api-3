@@ -1,5 +1,18 @@
 <article class="container">
-
+  <section class="spec_choose">
+    <h1>Choose Specific Course</h1>
+    <form [formGroup]="courseForm">
+      <div class = "d-grid">
+        <select
+          (change) = "updateCourse($event)"
+          formControlName = "specific_course">
+            <option> 
+              ECOMP
+            </option>
+        </select>
+      </div>
+    </form>
+  </section>
 
   <section class="create" *ngIf="isCreate">
 
