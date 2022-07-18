@@ -1,6 +1,9 @@
-<div id="app">
-  <nav class="navbar navbar-expand navbar-dark bg-dark">
-    <a href="#" class="navbar-brand">Class Organization API</a>
+<div id="app" class="app-caixa">
+
+  <nav class="navbar navbar-expand ">
+
+    <a href="#" class="navbar-brand"><img src= "assets/logo-verde.png" width="180px" height="100px"></a>
+
     <ul class="navbar-nav mr-auto" routerLinkActive="active">
       <li class="nav-item">
         <a href="/home" class="nav-link" routerLink="home">Home </a>
@@ -12,15 +15,14 @@
         <a href="/mod" class="nav-link" routerLink="mod">Moderator Board</a>
       </li>
       <li class="nav-item">
-        <a href="/user" class="nav-link" *ngIf="isLoggedIn" routerLink="user"
-          >User</a
-        >
+        <a href="/user" class="nav-link"  routerLink="user">User</a>
       </li>
       <li class="nav-item">
         <a href="/classes" class="nav-link" *ngIf="isLoggedIn" routerLink="classes">Classes</a>
       </li>
     </ul>
-    <ul class="navbar-nav ml-auto" *ngIf="!isLoggedIn">
+
+    <ul class="navbar-nav ml-auto" *ngIf="!isLoggedIn" >
       <li class="nav-item">
         <a href="/register" class="nav-link" routerLink="register">Sign Up</a>
       </li>
@@ -28,18 +30,20 @@
         <a href="/login" class="nav-link" routerLink="login">Login</a>
       </li>
     </ul>
-    <ul class="navbar-nav ml-auto" *ngIf="isLoggedIn">
+
+    <ul class="navbar-nav ml-auto" *ngIf="!isLoggedIn">
       <li class="nav-item">
-        <a href="/profile" class="nav-link" routerLink="profile">{{
-          username
-        }}</a>
+        <a href="/profile" class="nav-link" routerLink="profile">Profile</a>
       </li>
       <li class="nav-item">
         <a href class="nav-link" (click)="logout()">LogOut</a>
       </li>
     </ul>
+
   </nav>
+
   <div class="container">
     <router-outlet></router-outlet>
   </div>
+
 </div>
