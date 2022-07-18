@@ -14,7 +14,7 @@
       <li class="nav-item" *ngIf="showModeratorBoard">
         <a href="/mod" class="nav-link" routerLink="mod">Moderator Board</a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" *ngIf="isLoggedIn">
         <a href="/user" class="nav-link"  routerLink="user">User</a>
       </li>
       <li class="nav-item">
@@ -31,7 +31,7 @@
       </li>
     </ul>
 
-    <ul class="navbar-nav ml-auto" *ngIf="!isLoggedIn">
+    <ul class="navbar-nav ml-auto" *ngIf="isLoggedIn">
       <li class="nav-item">
         <a href="/profile" class="nav-link" routerLink="profile">Profile</a>
       </li>
