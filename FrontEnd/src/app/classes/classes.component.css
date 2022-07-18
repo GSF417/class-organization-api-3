@@ -1,6 +1,22 @@
 .upload{
   font-weight:bold;
-  color:#28a745;
+  background-color:#1b742f;
   margin-left: 15px;
   line-height: 36px;
+}
+
+.btn{
+  background-color: #1b742f;
+  border: #1b742f;
+  
+}
+
+.create{
+  margin: auto;
+  width: 50%;
+}
+
+.create h1{
+  font-weight: bold;
+  font-size: 35px;
 }
