@@ -8,7 +8,7 @@ using Todo.Data;
 namespace Todo.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220704131547_CreateDatabase")]
+    [Migration("20220723212800_CreateDatabase")]
     partial class CreateDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,6 +51,29 @@ namespace Todo.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Todo.Models.Uc", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UC")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("NVARCHAR")
+                        .HasColumnName("UC");
+
+                    b.Property<string>("UcPrereq")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("NVARCHAR")
+                        .HasColumnName("UcPrereq");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Ucs");
                 });
 #pragma warning restore 612, 618
         }

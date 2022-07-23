@@ -7,6 +7,20 @@ namespace Todo.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Ucs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UC = table.Column<string>(type: "NVARCHAR", maxLength: 150, nullable: false),
+                    UcPrereq = table.Column<string>(type: "NVARCHAR", maxLength: 200, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Ucs", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -31,6 +45,9 @@ namespace Todo.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Ucs");
+
             migrationBuilder.DropTable(
                 name: "Users");
         }

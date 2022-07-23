@@ -50,6 +50,29 @@ namespace Todo.Migrations
 
                     b.ToTable("Users");
                 });
+
+            modelBuilder.Entity("Todo.Models.Uc", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UC")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("NVARCHAR")
+                        .HasColumnName("UC");
+
+                    b.Property<string>("UcPrereq")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("NVARCHAR")
+                        .HasColumnName("UcPrereq");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Ucs");
+                });
 #pragma warning restore 612, 618
         }
     }
