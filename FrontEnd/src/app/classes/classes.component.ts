@@ -91,7 +91,7 @@ export class ClassesComponent implements OnInit {
     const token = this.tokenStorage.getToken();
     if (token != null) {
       this.user_id = token;
-      this.http.get(API_HOST+'UC/'+this.user_id)
+      this.http.get(API_HOST+'UCs')
       .subscribe({
         next: (res) => {
           this.clList = res as string[];
