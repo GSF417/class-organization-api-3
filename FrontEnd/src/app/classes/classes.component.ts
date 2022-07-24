@@ -29,6 +29,7 @@ export class ClassesComponent implements OnInit {
   name: string = "";
   prereq: string = "";
   classes: curricular_unit[] = [];
+  classes_unavailable: curricular_unit[] = [];
   user_id!: string;
   courseForm = this.fb.group({
     specific_course: ['ECOMP', [Validators.required]],
@@ -109,12 +110,17 @@ export class ClassesComponent implements OnInit {
     const token = this.tokenStorage.getToken();
       if (token != null) {
         this.user_id = token;
-        this.http.post(API_HOST+'UcsUser/'+this.user_id, this.cunit, {responseType: 'text'}).subscribe({
+        this.http.post(API_HOST+'Prereq/'+this.user_id, this.cunit, {responseType: 'text'}).subscribe({
           next: _ => {
-            this.getClasses();
-            this.isCreate = false;
+            this.http.post(API_HOST+'UCadd/'+this.user_id, this.cunit, {responseType: 'text'}).subscribe({
+              next: _ => {
+                this.getClasses();
+                this.isCreate = false;
+              },
+              error: (err: HttpErrorResponse) => console.log(err)
+            });
           },
-          error: (err: HttpErrorResponse) => console.log(err)
+          error: (err:HttpErrorResponse) => console.log(err)
         });
       }
   }
