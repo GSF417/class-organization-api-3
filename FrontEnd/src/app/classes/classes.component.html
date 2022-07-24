@@ -6,6 +6,7 @@
         <select
           (change) = "updateCourse($event)"
           formControlName = "specific_course">
+            <option disabled>Select Course</option>
             <option> 
               ECOMP
             </option>
@@ -21,8 +22,14 @@
     <form>
 
       <div class="mb-3">
-        <label for="name">Class Name:</label>
-        <input type="text" class="form-control" id="name" name="name" placeholder="Enter class name" [(ngModel)]="name">
+        <label for="name">Class</label>
+        <!--<input type="text" class="form-control" id="name" name="name" placeholder="Enter class name" [(ngModel)]="name">-->
+        <select
+          (change) = "updateClass($event)"
+          formControlName = "classesList">
+            <option disabled>Select Class Name</option>
+            <option *ngFor="let cl of clList">{{cl}}</option>
+        </select>
       </div>
 
       <div class="row" style="margin-bottom:15px;">
@@ -46,7 +53,7 @@
       <div class="row">
 
         <div class="offset-md-5 col-md-2">
-          <button type="button" class="btn btn-success" (click)="onCreate()">Create </button>
+          <button type="button" class="btn btn-success" (click)="onCreate()">Create</button>
         </div>
 
       </div>

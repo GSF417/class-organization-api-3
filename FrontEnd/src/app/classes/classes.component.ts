@@ -33,6 +33,7 @@ export class ClassesComponent implements OnInit {
   courseForm = this.fb.group({
     specific_course: ['ECOMP', [Validators.required]],
   });
+  clList: string[] = [];
   currentCourse: string = "";
   @Output() public onUploadFinished = new EventEmitter();
   
@@ -76,10 +77,24 @@ export class ClassesComponent implements OnInit {
     const token = this.tokenStorage.getToken();
     if (token != null) {
       this.user_id = token;
-      this.http.get(API_HOST+this.user_id)
+      this.http.get(API_HOST+'UcsUser/'+this.user_id)
       .subscribe({
         next: (res) => {
           this.classes = res as curricular_unit[];
+        },
+        error: (err: HttpErrorResponse) => console.log(err)
+      });
+    }
+  }
+
+  private getClassList = () => {
+    const token = this.tokenStorage.getToken();
+    if (token != null) {
+      this.user_id = token;
+      this.http.get(API_HOST+'UC/'+this.user_id)
+      .subscribe({
+        next: (res) => {
+          this.clList = res as string[];
         },
         error: (err: HttpErrorResponse) => console.log(err)
       });
@@ -94,7 +109,7 @@ export class ClassesComponent implements OnInit {
     const token = this.tokenStorage.getToken();
       if (token != null) {
         this.user_id = token;
-        this.http.post(API_HOST+'UC/'+this.user_id, this.cunit, {responseType: 'text'}).subscribe({
+        this.http.post(API_HOST+'UcsUser/'+this.user_id, this.cunit, {responseType: 'text'}).subscribe({
           next: _ => {
             this.getClasses();
             this.isCreate = false;
@@ -108,6 +123,7 @@ export class ClassesComponent implements OnInit {
     this.isCreate = true;
     this.name = '';
     this.prereq = '';
+    this.getClassList();
   }
 
   updateCourse (e: any) {
@@ -122,6 +138,10 @@ export class ClassesComponent implements OnInit {
 
   submitCourse(): void {
     this.currentCourse = this.specific_course?.value.stringify;
+  }
+
+  updateClass(e: any): void {
+    this.name = e.target.value;
   }
 
 }
