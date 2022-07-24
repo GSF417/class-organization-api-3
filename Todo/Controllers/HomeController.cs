@@ -85,6 +85,7 @@ namespace Todo.Controllers
         }
 
         //add Ucs of a pdf
+        /*
         [HttpPost("/File/{id:int}")]
         public IActionResult UploadFile(
             [FromRoute] int id,
@@ -124,7 +125,7 @@ namespace Todo.Controllers
             }
         
         }
-
+        */
 
         // Verify Uc Prereq
         [HttpPost("/Prereq/{id:int}")]

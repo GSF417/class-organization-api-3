@@ -108,10 +108,11 @@ export class ClassesComponent implements OnInit {
     }
     console.log(this.name);
     const token = this.tokenStorage.getToken();
-      if (token != null) {
-        this.user_id = token;
-        this.http.post(API_HOST+'Prereq/'+this.user_id, this.cunit, {responseType: 'text'}).subscribe({
-          next: _ => {
+    if (token != null) {
+      this.user_id = token;
+      this.http.post(API_HOST+'Prereq/'+this.user_id, this.cunit, {responseType: 'text'}).subscribe({
+        next: (res) => {
+          if (res == "Usuário tem os pré-requisitos para fazer essa matéria") {
             this.http.post(API_HOST+'UCadd/'+this.user_id, this.cunit, {responseType: 'text'}).subscribe({
               next: _ => {
                 this.getClasses();
@@ -119,10 +120,13 @@ export class ClassesComponent implements OnInit {
               },
               error: (err: HttpErrorResponse) => console.log(err)
             });
-          },
-          error: (err:HttpErrorResponse) => console.log(err)
-        });
-      }
+          }
+        },
+        error: (err:HttpErrorResponse) => {
+          console.log(err);
+        }
+      });
+    }
   }
 
   returnToCreate = () => {
@@ -132,23 +136,8 @@ export class ClassesComponent implements OnInit {
     this.getClassList();
   }
 
-  updateCourse (e: any) {
-    this.specific_course?.setValue(e.target.value, {
-      onlySelf: true,
-    });
-  }
-
-  get specific_course() {
-    return this.courseForm.get('specific_course');
-  }
-
-  submitCourse(): void {
-    this.currentCourse = this.specific_course?.value.stringify;
-  }
-
-  updateClass(e: any): void {
+  updateClass(e: any) {
     this.name = e.target.value;
   }
-
 }
 /* https://code-maze.com/upload-files-dot-net-core-angular/ */
