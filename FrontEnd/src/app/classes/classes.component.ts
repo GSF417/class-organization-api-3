@@ -96,6 +96,7 @@ export class ClassesComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.clList = res as string[];
+          this.name = this.clList[0];
         },
         error: (err: HttpErrorResponse) => console.log(err)
       });
@@ -111,19 +112,18 @@ export class ClassesComponent implements OnInit {
     if (token != null) {
       this.user_id = token;
       this.http.post(API_HOST+'Prereq/'+this.user_id, this.cunit, {responseType: 'text'}).subscribe({
-        next: (res) => {
-          if (res == "Usuário tem os pré-requisitos para fazer essa matéria") {
-            this.http.post(API_HOST+'UCadd/'+this.user_id, this.cunit, {responseType: 'text'}).subscribe({
-              next: _ => {
-                this.getClasses();
-                this.isCreate = false;
-              },
-              error: (err: HttpErrorResponse) => console.log(err)
-            });
-          }
+        next: _ => {
+          this.http.post(API_HOST+'UCadd/'+this.user_id, this.cunit, {responseType: 'text'}).subscribe({
+            next: _ => {
+              this.getClasses();
+              this.isCreate = false;
+            },
+            error: (err: HttpErrorResponse) => console.log(err)
+          });
         },
         error: (err:HttpErrorResponse) => {
           console.log(err);
+          console.log(err.message);
         }
       });
     }

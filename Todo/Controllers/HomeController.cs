@@ -139,6 +139,7 @@ namespace Todo.Controllers
             
             var uc = context.Ucs.FirstOrDefault(x=> x.UC == aux);
             var user = context.TodoUsers.FirstOrDefault(x=> x.Id == id);
+            var ucsUser = new List<string>();
             
             if (uc == null)
                 return NotFound("Não existe essa Uc");
@@ -147,7 +148,8 @@ namespace Todo.Controllers
                 return NotFound("Não existe esse usuário");
 
             var ucPrereqs = uc.UcPrereq.Split(";").ToList();
-            var ucsUser = user.UCs.Split("\n").ToList();
+            if(user.UCs != null)
+                ucsUser = user.UCs.Split("\n").ToList();
 
             for (int i = 0; i < ucsUser.Count; i++)
             {
@@ -190,34 +192,38 @@ namespace Todo.Controllers
             [FromServices] AppDbContext context)
         {
             var model = context.TodoUsers.FirstOrDefault(x=> x.Id == id);
-            var ucs = context.Ucs.ToList();
-            
-            string aux = nameUc.UC.ToUpper();
-            aux = aux.Trim();
-            aux = Regex.Replace(aux, @"\s+", " ");
-
             if (model == null)
-                return NotFound("Não existe esse usuário");
+                    return NotFound("Não existe esse usuário");
+                    
+            if (context.Ucs != null) {
+                var ucs = context.Ucs.ToList();
+                
+                string aux = nameUc.UC.ToUpper();
+                aux = aux.Trim();
+                aux = Regex.Replace(aux, @"\s+", " ");
             
+                var count = 0;
 
-            var count = 0;
+                for (int i = 0; i < ucs.Count; i++)
+                {
+                    if(aux == ucs[i].UC)
+                        count++; 
+                }
 
-            for (int i = 0; i < ucs.Count; i++)
-            {
-                if(aux == ucs[i].UC)
-                    count++; 
+                if(count < 1)
+                    return BadRequest("Essa Uc não existe");
+
+                var ucsUser = model.UCs.Split("\n").ToList();
+
+                if(ucsUser.IndexOf(aux) != -1)
+                    return BadRequest("Usuário já tem essa Uc");
+                else
+                    model.UCs = model.UCs + "\n" + $"{aux}";
             }
-
-            if(count < 1)
-                return BadRequest("Essa Uc não existe");
-
-            var ucsUser = model.UCs.Split("\n").ToList();
-
-            if(ucsUser.IndexOf(aux) != -1)
-                return BadRequest("Usuário já tem essa Uc");
-            else
+            else {
+                string aux = nameUc.UC.ToUpper();
                 model.UCs = model.UCs + "\n" + $"{aux}";
-
+            }
             context.SaveChanges();
 
             return Ok("Máteria adicionada");
