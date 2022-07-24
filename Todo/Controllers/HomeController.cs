@@ -181,6 +181,82 @@ namespace Todo.Controllers
     
         }
 
+        // Add Ucs manually
+        [HttpPost("/UCadd/{id:int}")] // Read the subjects that passed
+        public IActionResult UploadUc(
+            [FromRoute] int id,
+            [FromBody] Uc nameUc, 
+            [FromServices] AppDbContext context)
+        {
+            var model = context.TodoUsers.FirstOrDefault(x=> x.Id == id);
+            var ucs = context.Ucs.ToList();
+            
+            string aux = nameUc.UC.ToUpper();
+            aux = aux.Trim();
+            aux = Regex.Replace(aux, @"\s+", " ");
+
+            if (model == null)
+                return NotFound("Não existe esse usuário");
+            
+
+            var count = 0;
+
+            for (int i = 0; i < ucs.Count; i++)
+            {
+                if(aux == ucs[i].UC)
+                    count++; 
+            }
+
+            if(count < 1)
+                return BadRequest("Essa Uc não existe");
+
+            var ucsUser = model.UCs.Split("\n").ToList();
+
+            if(ucsUser.IndexOf(aux) != -1)
+                return BadRequest("Usuário já tem essa Uc");
+            else
+                model.UCs = model.UCs + "\n" + $"{aux}";
+
+            context.SaveChanges();
+
+            return Ok("Máteria adicionada");
+        }
+
+        // Add Ucs manually
+        [HttpGet("/UCs")] // Read the subjects that passed
+        public IActionResult LoadUc( 
+            [FromServices] AppDbContext context)
+        {
+            var ucs = context.Ucs.ToList();
+
+            var aux = new List<string>();
+            
+            for (int i = 0; i < ucs.Count; i++)
+            {
+                aux.Add(ucs[i].UC); 
+            }
+
+            return Ok(aux);
+        }
+
+        // Get Ucs of user
+        [HttpGet("/UcsUser/{id:int}")]
+        public IActionResult GetById([FromRoute] int id,
+        [FromServices] AppDbContext context)
+        {
+            var user = context.TodoUsers.FirstOrDefault(x=> x.Id == id);
+            if (user == null)
+                return NotFound("Não existe esse usuário");
+
+            if(user.UCs == null)
+                return Ok("Não tem Ucs");
+
+
+            var ucs = user.UCs.Split("\n").ToList();
+
+            return Ok(ucs);
+        }
+
         // Add the table of prereq 
         [HttpPost("/Prereq/addTab")]
         public IActionResult VerifyPrereq([FromBody] string tudo,
@@ -227,56 +303,6 @@ namespace Todo.Controllers
 
             return Ok(context.Ucs.ToList());
         }
-
-        // Get Ucs of user
-        [HttpGet("/UcsUser/{id:int}")]
-        public IActionResult GetById([FromRoute] int id,
-        [FromServices] AppDbContext context)
-        {
-            var user = context.TodoUsers.FirstOrDefault(x=> x.Id == id);
-            if (user == null)
-                return NotFound("Não existe esse usuário");
-
-            if(user.UCs == null)
-                return Ok("Não tem Ucs");
-
-
-            var ucs = user.UCs.Split("\n").ToList();
-
-            return Ok(ucs);
-        }
-
-
-        // Add Ucs manually
-        // [HttpPost("/UC/{id:int}")] // Read the subjects that passed
-        // public IActionResult UploadUc(
-        //     [FromRoute] int id,
-        //     [FromBody] UcUpload nameUc, 
-        //     [FromServices] AppDbContext context)
-        // {
-        //     var model = context.TodoUsers.FirstOrDefault(x=> x.Id == id);
-        //     if (model == null)
-        //         return NotFound("Não existe esse usuário");
-            
-        //     if(model.UCs == null)
-        //     {
-        //         model.UCs = nameUc.UC;
-        //         context.SaveChanges();
-        //         return Ok("Máteria adicionada");
-
-        //     }
-            
-        //     var ucs = model.UCs.Split("\n").ToList();
-
-        //     if(ucs.IndexOf(nameUc.UC) != -1)
-        //         return BadRequest("Já existe essa Uc");
-        //     else
-        //         model.UCs = model.UCs + "\n" + $"{nameUc.UC}";
-
-        //     context.SaveChanges();
-
-        //     return Ok("Máteria adicionada");
-        // }
 
     }
 }
