@@ -1,14 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
 using Todo.Data;
 using Todo.Models;
-using System.IO;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace Todo.Controllers
 {
     [ApiController]
     public class HomeController : ControllerBase
     {
+        // All Users info
         [HttpGet("/teste")]
         public IActionResult Get([FromServices] AppDbContext context) 
             =>Ok(context.TodoUsers.ToList());
@@ -125,39 +126,110 @@ namespace Todo.Controllers
         }
 
 
-        // Add Ucs manually
-        [HttpPost("/UC/{id:int}")] // Read the subjects that passed
-        public IActionResult UploadUc(
-            [FromRoute] int id,
-            [FromBody] UcUpload nameUc, 
-            [FromServices] AppDbContext context)
+        // Verify Uc Prereq
+        [HttpPost("/Prereq/{id:int}")]
+        public IActionResult VerifyPrereq([FromRoute] int id,
+        [FromBody] Uc name,
+        [FromServices] AppDbContext context)
         {
-            var model = context.TodoUsers.FirstOrDefault(x=> x.Id == id);
-            if (model == null)
+            string aux = name.UC.ToUpper();
+            aux = aux.Trim();
+            aux = Regex.Replace(aux, @"\s+", " ");
+            
+            var uc = context.Ucs.FirstOrDefault(x=> x.UC == aux);
+            var user = context.TodoUsers.FirstOrDefault(x=> x.Id == id);
+            
+            if (uc == null)
+                return NotFound("Não existe essa Uc");
+
+            if (user == null)
                 return NotFound("Não existe esse usuário");
-            
-            if(model.UCs == null)
+
+            var ucPrereqs = uc.UcPrereq.Split(";").ToList();
+            var ucsUser = user.UCs.Split("\n").ToList();
+
+            for (int i = 0; i < ucsUser.Count; i++)
             {
-                model.UCs = nameUc.UC;
-                context.SaveChanges();
-                return Ok("Máteria adicionada");
-
+                if (ucsUser[i] == uc.UC)
+                    return Ok("Usuário já tem essa matéria");        
             }
-            
-            var ucs = model.UCs.Split("\n").ToList();
 
-            if(ucs.IndexOf(nameUc.UC) != -1)
-                return BadRequest("Já existe essa Uc");
+            for (int i = 0; i < ucPrereqs.Count; i++)
+            {
+                ucPrereqs[i] = ucPrereqs[i].Trim(); 
+            }
+
+            int count = 0;
+
+            for (int i = 0; i < ucPrereqs.Count; i++)
+            {
+                for (int j = 0; j < ucsUser.Count; j++)
+                {
+                    if (ucsUser[j] == ucPrereqs[i])
+                        count++;
+                }
+            }
+
+            if(ucPrereqs[0] == "NÃO HÁ")
+                return Ok("Usuário tem os pré-requisitos para fazer essa matéria");
+
+            else if(count == ucPrereqs.Count)
+                return Ok("Usuário tem os pré-requisitos para fazer essa matéria");
+
             else
-                model.UCs = model.UCs + "\n" + $"{nameUc.UC}";
+                return Ok("Usuário não tem os pré requisitos para fazer essa matéria");
+    
+        }
 
-            context.SaveChanges();
+        // Add the table of prereq 
+        [HttpPost("/Prereq/addTab")]
+        public IActionResult VerifyPrereq([FromBody] string tudo,
+        [FromServices] AppDbContext context)
+        {
 
-            return Ok("Máteria adicionada");
+            var auxs = tudo.Split(" /// ").ToList();
+
+            var listauc = new List<string>();
+            var listapreq = new List<string>();
+
+            var f = 0;
+            string a;
+            foreach (var aux in auxs)
+            {
+                if(f == 0)
+                {
+                    a = aux.Trim();
+                    a = a.ToUpper();
+                    a = Regex.Replace(a, @"\s+", " ");
+                    listauc.Add(a);
+                    f++;
+                }
+                else
+                {
+                    a = aux.Trim();
+                    a = a.ToUpper();
+                    a = Regex.Replace(a, @"\s+", " ");
+                    listapreq.Add(a);
+                    f = 0;
+                }
+            }
+            listauc.Remove("");
+
+            // for (int i = 0; i < listauc.Count; i++)
+            // {
+            //     var uc = new Uc();
+            //     uc.UC = listauc[i];
+            //     uc.UcPrereq = listapreq[i];
+            //     context.Ucs.Add(uc);
+            //     context.SaveChanges();
+
+            // }
+
+            return Ok(context.Ucs.ToList());
         }
 
         // Get Ucs of user
-        [HttpGet("/{id:int}")]
+        [HttpGet("/UcsUser/{id:int}")]
         public IActionResult GetById([FromRoute] int id,
         [FromServices] AppDbContext context)
         {
@@ -174,6 +246,37 @@ namespace Todo.Controllers
             return Ok(ucs);
         }
 
+
+        // Add Ucs manually
+        // [HttpPost("/UC/{id:int}")] // Read the subjects that passed
+        // public IActionResult UploadUc(
+        //     [FromRoute] int id,
+        //     [FromBody] UcUpload nameUc, 
+        //     [FromServices] AppDbContext context)
+        // {
+        //     var model = context.TodoUsers.FirstOrDefault(x=> x.Id == id);
+        //     if (model == null)
+        //         return NotFound("Não existe esse usuário");
+            
+        //     if(model.UCs == null)
+        //     {
+        //         model.UCs = nameUc.UC;
+        //         context.SaveChanges();
+        //         return Ok("Máteria adicionada");
+
+        //     }
+            
+        //     var ucs = model.UCs.Split("\n").ToList();
+
+        //     if(ucs.IndexOf(nameUc.UC) != -1)
+        //         return BadRequest("Já existe essa Uc");
+        //     else
+        //         model.UCs = model.UCs + "\n" + $"{nameUc.UC}";
+
+        //     context.SaveChanges();
+
+        //     return Ok("Máteria adicionada");
+        // }
 
     }
 }
