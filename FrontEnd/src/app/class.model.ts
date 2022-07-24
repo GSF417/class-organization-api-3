@@ -1,3 +1,3 @@
 export interface curricular_unit {
-    UC: string;
+    uc: string;
 }

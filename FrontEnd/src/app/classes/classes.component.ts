@@ -28,7 +28,7 @@ export class ClassesComponent implements OnInit {
   cunit!: curricular_unit;
   name: string = "";
   prereq: string = "";
-  classes: string[] = [];
+  classes: curricular_unit[] = [];
   user_id!: string;
   courseForm = this.fb.group({
     specific_course: ['ECOMP', [Validators.required]],
@@ -79,7 +79,7 @@ export class ClassesComponent implements OnInit {
       this.http.get(API_HOST+this.user_id)
       .subscribe({
         next: (res) => {
-          this.classes = res as string[];
+          this.classes = res as curricular_unit[];
         },
         error: (err: HttpErrorResponse) => console.log(err)
       });
@@ -88,7 +88,7 @@ export class ClassesComponent implements OnInit {
 
   onCreate = () => {
     this.cunit = {
-      UC: this.name,
+      uc: this.name,
     }
     console.log(this.name);
     const token = this.tokenStorage.getToken();
@@ -124,46 +124,5 @@ export class ClassesComponent implements OnInit {
     this.currentCourse = this.specific_course?.value.stringify;
   }
 
-  courseDone(course: string) {
-    var i: number;
-    for (i = 0; i < this.classes.length; i++) {
-      if (this.classes[i] === course) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  coursePossible(course: string) {
-    var i: number;
-    var j: number;
-    var prereqs: string[] = ["", "", ""];
-    var possible: boolean = true;
-    var found: boolean[] = [false, false, false];
-    if (this.currentCourse === 'ECOMP') {
-      for (i = 0; i < ECOMP.length; i++) {
-        if (ECOMP[i].name == course) {
-          prereqs = ECOMP[i].prereqs;
-          break;
-        }
-      }
-    }
-    for (i = 0; i < this.classes.length; i++) {
-      for (j = 0; j < 3; j++) {
-        if (this.classes[i] === prereqs[j]) {
-          found[j] = true;
-        }
-      }
-    }
-    for (i = 0; i < 3; i++) {
-      if (found[i] != true) {
-        possible = false;
-      }
-    }
-    if (possible) {
-      return true;
-    }
-    return false;
-  }
 }
 /* https://code-maze.com/upload-files-dot-net-core-angular/ */
