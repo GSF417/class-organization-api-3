@@ -26,8 +26,7 @@
         <label for="name">Class</label>
         <!--<input type="text" class="form-control" id="name" name="name" placeholder="Enter class name" [(ngModel)]="name">-->
         <select
-          (change) = "updateClass($event)"
-          formControlName = "classesList">
+          (change) = "updateClass($event)">
             <option disabled>Select Class Name</option>
             <option *ngFor="let cl of clList">{{cl}}</option>
         </select>
@@ -60,22 +59,47 @@
       </div>
 
     </form>
+    <div *ngIf="backResponse">
+      {{backResponse}}
+    </div>
 
   </section>
 
   <section class="classes" *ngIf="!isCreate">
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th scope="col">Name</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let classes of classes">
-          <td>{{classes}}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-responsive">
+      <table mat-table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">UCs Não Cumpridas</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let class of ECOMP">
+            <div *ngIf="hasUC(class.name)">
+              <td class="UC-cumprida">{{class.name}}</td>
+            </div>
+            <div *ngIf="!hasUC(class.name) && hasPrereq(class.name)">
+              <td class="UC-com-prereq">{{class.name}}</td>
+            </div>
+            <div *ngIf="!hasUC(class.name) && !hasPrereq(class.name)">
+              <td class="UC-sem-prereq">{{class.name}}</td>
+            </div>
+          </tr>
+        </tbody>
+      </table>
+      <table mat-table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col" class="UC-cumprida">UCs Cumpridas</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let class of classes">
+            <td class="UC-cumprida">{{class}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
     <div class="row">
       <div class="offset-md-10 col-md-2">

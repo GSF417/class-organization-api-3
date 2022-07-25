@@ -213,10 +213,14 @@ namespace Todo.Controllers
                 if(count < 1)
                     return BadRequest("Essa Uc não existe");
 
-                var ucsUser = model.UCs.Split("\n").ToList();
+                if (model.UCs != null) {
+                    var ucsUser = model.UCs.Split("\n").ToList();
 
-                if(ucsUser.IndexOf(aux) != -1)
-                    return BadRequest("Usuário já tem essa Uc");
+                    if(ucsUser.IndexOf(aux) != -1)
+                        return BadRequest("Usuário já tem essa Uc");
+                    else
+                        model.UCs = model.UCs + "\n" + $"{aux}";
+                }
                 else
                     model.UCs = model.UCs + "\n" + $"{aux}";
             }

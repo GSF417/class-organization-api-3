@@ -8,7 +8,6 @@
 .btn{
   background-color: #1b742f;
   border: #1b742f;
-  
 }
 
 .create{
@@ -19,4 +18,19 @@
 .create h1{
   font-weight: bold;
   font-size: 35px;
+}
+
+.UC-cumprida {
+  background-color:cadetblue;
+  border-style: inset;
+}
+
+.UC-com-prereq {
+  background-color:yellow;
+  border-style: inset;
+}
+
+.UC-sem-prereq {
+  background-color:red;
+  border-style: inset;
 }

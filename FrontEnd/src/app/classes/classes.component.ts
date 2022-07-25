@@ -1,4 +1,4 @@
-import { HttpClient, HttpEventType, HttpErrorResponse, HttpProgressEvent, HttpEvent, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpEventType, HttpErrorResponse, HttpProgressEvent, HttpEvent, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs';  
 import { ClassService } from '../_services/class.service'; 
@@ -8,7 +8,7 @@ import { FormBuilder, FormsModule } from '@angular/forms';
 import { TokenStorageService } from '../_services/token-storage.service';
 import { tokenize } from '@angular/compiler/src/ml_parser/lexer';
 import { Validators } from '@angular/forms';
-import { ECOMP } from '../courses.model';
+import { course, ECOMP } from '../courses.model';
 
 const API_HOST = 'https://localhost:7275/';
 const httpOptions = {
@@ -36,6 +36,8 @@ export class ClassesComponent implements OnInit {
   });
   clList: string[] = [];
   currentCourse: string = "";
+  backResponse: string = "";
+  ECOMP: course[] = ECOMP;
   @Output() public onUploadFinished = new EventEmitter();
   
   constructor(private http: HttpClient, private tokenStorage: TokenStorageService, public fb: FormBuilder) { 
@@ -88,6 +90,36 @@ export class ClassesComponent implements OnInit {
     }
   }
 
+  hasUC(e: any): boolean {
+    this.http.post(API_HOST+'Prereq/'+this.user_id, this.cunit, {responseType: 'text'}).subscribe({
+      next: (res) => {
+        if (res == 'Usuário já tem essa matéria') {
+          return true;
+        }
+        return false;
+      },
+      error: (err: HttpErrorResponse) => {
+        console.log(err);
+      }
+    });
+    return false;
+  }
+
+  hasPrereq(e: any): boolean {
+    this.http.post(API_HOST+'Prereq/'+this.user_id, this.cunit, {responseType: 'text'}).subscribe({
+      next: (res) => {
+        if (res == 'Usuário tem os pré-requisitos para fazer essa matéria') {
+          return true;
+        }
+        return false;
+      },
+      error: (err: HttpErrorResponse) => {
+        console.log(err);
+      }
+    });
+    return false;
+  }
+
   private getClassList = () => {
     const token = this.tokenStorage.getToken();
     if (token != null) {
@@ -112,18 +144,27 @@ export class ClassesComponent implements OnInit {
     if (token != null) {
       this.user_id = token;
       this.http.post(API_HOST+'Prereq/'+this.user_id, this.cunit, {responseType: 'text'}).subscribe({
-        next: _ => {
-          this.http.post(API_HOST+'UCadd/'+this.user_id, this.cunit, {responseType: 'text'}).subscribe({
-            next: _ => {
-              this.getClasses();
-              this.isCreate = false;
-            },
-            error: (err: HttpErrorResponse) => console.log(err)
-          });
+        next: (res: any) => {
+          console.log(res);
+          if (res == 'Usuário tem os pré-requisitos para fazer essa matéria') {
+            this.http.post(API_HOST+'UCadd/'+this.user_id, this.cunit, {responseType: 'text'}).subscribe({
+              next: (res: any) => {
+                this.getClasses();
+                this.isCreate = false;
+                console.log(res);
+                this.backResponse = res;
+              },
+              error: (err: HttpErrorResponse) => {
+                console.log(err);
+                console.log(err.error);
+                this.backResponse = err.error;
+            }});
+          }
         },
         error: (err:HttpErrorResponse) => {
           console.log(err);
-          console.log(err.message);
+          console.log(err.error);
+          this.backResponse = err.error;
         }
       });
     }
@@ -133,6 +174,7 @@ export class ClassesComponent implements OnInit {
     this.isCreate = true;
     this.name = '';
     this.prereq = '';
+    this.backResponse = '';
     this.getClassList();
   }
 
