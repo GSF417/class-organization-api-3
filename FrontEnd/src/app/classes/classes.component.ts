@@ -38,6 +38,7 @@ export class ClassesComponent implements OnInit {
   currentCourse: string = "";
   backResponse: string = "";
   ECOMP: course[] = ECOMP;
+  ECOMP_prereq: number[] = [];
   @Output() public onUploadFinished = new EventEmitter();
   
   constructor(private http: HttpClient, private tokenStorage: TokenStorageService, public fb: FormBuilder) { 
@@ -77,6 +78,7 @@ export class ClassesComponent implements OnInit {
   }
 
   private getClasses = () => {
+    var i = 0;
     const token = this.tokenStorage.getToken();
     if (token != null) {
       this.user_id = token;
@@ -87,6 +89,30 @@ export class ClassesComponent implements OnInit {
         },
         error: (err: HttpErrorResponse) => console.log(err)
       });
+      for (i = 0; i < ECOMP.length; i++) {
+        this.cunit = {
+          uc: ECOMP[i].name,
+        }
+        this.http.post(API_HOST+'Prereq/'+this.user_id, this.cunit, {responseType: 'text'})
+        .subscribe({
+          next: (res) => {
+            if (res == 'Usuário já tem essa matéria') {
+              this.ECOMP_prereq.push(2);
+            }
+            else if (res == 'Usuário tem os pré-requisitos para fazer essa matéria') {
+              this.ECOMP_prereq.push(1);
+            }
+            else {
+              this.ECOMP_prereq.push(0);
+            }
+            console.log(i)
+          },
+          error: (err: HttpErrorResponse) => {
+            console.log(this.cunit.uc)
+            console.log(err +" "+err.error + " " + ECOMP[i - 1].name);
+          }
+        });
+      }
     }
   }
 

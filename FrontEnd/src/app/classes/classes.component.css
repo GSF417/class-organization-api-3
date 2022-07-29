@@ -5,6 +5,10 @@
   line-height: 36px;
 }
 
+:host ::ng-deep .background {
+  height: auto;
+}
+
 .btn{
   background-color: #1b742f;
   border: #1b742f;
