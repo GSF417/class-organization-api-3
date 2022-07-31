@@ -1,6 +1,6 @@
 import { HttpClient, HttpEventType, HttpErrorResponse, HttpProgressEvent, HttpEvent, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Observable } from 'rxjs';  
+import { Observable, forkJoin } from 'rxjs';  
 import { ClassService } from '../_services/class.service'; 
 import { CUnitComponent } from '../cunit/cunit.component'; 
 import { curricular_unit } from '../class.model';
@@ -8,7 +8,7 @@ import { FormBuilder, FormsModule } from '@angular/forms';
 import { TokenStorageService } from '../_services/token-storage.service';
 import { tokenize } from '@angular/compiler/src/ml_parser/lexer';
 import { Validators } from '@angular/forms';
-import { course, ECOMP } from '../courses.model';
+import { course, ECOMP, CCOMP } from '../courses.model';
 
 const API_HOST = 'https://localhost:7275/';
 const httpOptions = {
@@ -36,16 +36,35 @@ export class ClassesComponent implements OnInit {
   });
   clList: string[] = [];
   currentCourse: string = "";
+  currCourseNum: number = 0;
   backResponse: string = "";
   ECOMP: course[] = ECOMP;
+  CCOMP: course[] = CCOMP;
   ECOMP_prereq: number[] = [];
   @Output() public onUploadFinished = new EventEmitter();
   
   constructor(private http: HttpClient, private tokenStorage: TokenStorageService, public fb: FormBuilder) { 
   }
   ngOnInit() {
+    this.currentCourse = "ECOMP";
     this.getClasses();
   }
+
+  changeCourse() {
+    switch (this.currCourseNum) {
+      case 0:
+        this.currCourseNum = 1;
+        this.currentCourse = "CCOMP";
+        break;
+      case 1:
+        this.currCourseNum = 0;
+        this.currentCourse = "ECOMP";
+        break;
+    }
+    this.ECOMP_prereq = [];
+    this.getClasses();
+  }
+
   uploadFile = (files: FileList | null = null) => {
     if (files != null) {
       if (files.length === 0) {
@@ -77,8 +96,48 @@ export class ClassesComponent implements OnInit {
     this.response = event.message; 
   }
 
+  private checkPreReq = (i: number) => {
+    if (this.currCourseNum == 0) {
+      if (i >= this.ECOMP.length) {
+        return;
+      }
+      this.cunit = {
+        uc: ECOMP[i].name,
+      }
+    }
+    else if (this.currCourseNum == 1) {
+      if (i >= this.CCOMP.length) {
+        return;
+      }
+      this.cunit = {
+        uc: CCOMP[i].name,
+      }
+    }
+    this.http.post(API_HOST+'Prereq/'+this.user_id, this.cunit, {responseType: 'text'})
+    .subscribe({
+      next: (res) => {
+        if (res == 'Usuário já tem essa matéria') {
+          this.ECOMP_prereq.push(2);
+        }
+        else if (res == 'Usuário tem os pré-requisitos para fazer essa matéria') {
+          this.ECOMP_prereq.push(1);
+        }
+        else {
+          this.ECOMP_prereq.push(0);
+        }
+        console.log(i + " " + this.cunit.uc)
+        this.checkPreReq(i+1);
+      },
+      error: (err: HttpErrorResponse) => {
+        console.log(this.cunit.uc)
+        console.log(err +" "+err.error + " " + ECOMP[i - 1].name);
+      }
+    });
+  }
+
   private getClasses = () => {
     var i = 0;
+    var allObvs: Observable<{}>[] = [];
     const token = this.tokenStorage.getToken();
     if (token != null) {
       this.user_id = token;
@@ -89,30 +148,7 @@ export class ClassesComponent implements OnInit {
         },
         error: (err: HttpErrorResponse) => console.log(err)
       });
-      for (i = 0; i < ECOMP.length; i++) {
-        this.cunit = {
-          uc: ECOMP[i].name,
-        }
-        this.http.post(API_HOST+'Prereq/'+this.user_id, this.cunit, {responseType: 'text'})
-        .subscribe({
-          next: (res) => {
-            if (res == 'Usuário já tem essa matéria') {
-              this.ECOMP_prereq.push(2);
-            }
-            else if (res == 'Usuário tem os pré-requisitos para fazer essa matéria') {
-              this.ECOMP_prereq.push(1);
-            }
-            else {
-              this.ECOMP_prereq.push(0);
-            }
-            console.log(i)
-          },
-          error: (err: HttpErrorResponse) => {
-            console.log(this.cunit.uc)
-            console.log(err +" "+err.error + " " + ECOMP[i - 1].name);
-          }
-        });
-      }
+      this.checkPreReq(0);
     }
   }
 

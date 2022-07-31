@@ -49,23 +49,30 @@
   </section>
 
   <section class="classes" *ngIf="!isCreate">
+    <div class="row">
+      <div class="offset-md-10 col-md-2">
+        {{currentCourse}}
+        <button type="button" class="btn btn-success" (click)="changeCourse()">Change Course</button>
+      </div>
+    </div>
     <div class="table-responsive">
       <table mat-table class="table table-striped">
         <thead>
           <tr>
-            <th scope="col">UCs da ECOMP</th>
+            <th scope="col">UCs da {{currentCourse}}</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody *ngIf="currCourseNum == 0">
           <tr *ngFor="let class of ECOMP; let index = index">
-            <td class="UC-cumprida" *ngIf="ECOMP_prereq[index] == 2">
-              {{class.name}}
+            <td [className]="ECOMP_prereq[index] == 2 ? 'UC-cumprida' : (ECOMP_prereq[index] == 1 ? 'UC-com-prereq' : 'UC-sem-prereq')">
+              {{class.name.toUpperCase()}}
             </td>
-            <td class="UC-com-prereq" *ngIf="ECOMP_prereq[index] == 1">
-              {{class.name}}
-            </td>
-            <td class="UC-sem-prereq" *ngIf="ECOMP_prereq[index] == 0">
-              {{class.name}}
+          </tr>
+        </tbody>
+        <tbody *ngIf="currCourseNum == 1">
+          <tr *ngFor="let class of CCOMP; let index = index">
+            <td [className]="ECOMP_prereq[index] == 2 ? 'UC-cumprida' : (ECOMP_prereq[index] == 1 ? 'UC-com-prereq' : 'UC-sem-prereq')">
+              {{class.name.toUpperCase()}}
             </td>
           </tr>
         </tbody>
