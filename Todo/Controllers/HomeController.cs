@@ -85,7 +85,7 @@ namespace Todo.Controllers
         }
 
         //add Ucs of a pdf
-        /*
+        
         [HttpPost("/File/{id:int}")]
         public IActionResult UploadFile(
             [FromRoute] int id,
@@ -125,7 +125,7 @@ namespace Todo.Controllers
             }
         
         }
-        */
+        
 
         // Verify Uc Prereq
         [HttpPost("/Prereq/{id:int}")]
@@ -195,39 +195,35 @@ namespace Todo.Controllers
             if (model == null)
                     return NotFound("Não existe esse usuário");
                     
-            if (context.Ucs != null) {
-                var ucs = context.Ucs.ToList();
-                
-                string aux = nameUc.UC.ToUpper();
-                aux = aux.Trim();
-                aux = Regex.Replace(aux, @"\s+", " ");
+
+            var ucs = context.Ucs.ToList();
             
-                var count = 0;
+            string aux = nameUc.UC.ToUpper();
+            aux = aux.Trim();
+            aux = Regex.Replace(aux, @"\s+", " ");
+        
+            var count = 0;
 
-                for (int i = 0; i < ucs.Count; i++)
-                {
-                    if(aux == ucs[i].UC)
-                        count++; 
-                }
+            for (int i = 0; i < ucs.Count; i++)
+            {
+                if(aux == ucs[i].UC)
+                    count++; 
+            }
 
-                if(count < 1)
-                    return BadRequest("Essa Uc não existe");
+            if(count < 1)
+                return BadRequest("Essa Uc não existe");
 
-                if (model.UCs != null) {
-                    var ucsUser = model.UCs.Split("\n").ToList();
+            if (model.UCs != null) {
+                var ucsUser = model.UCs.Split("\n").ToList();
 
-                    if(ucsUser.IndexOf(aux) != -1)
-                        return BadRequest("Usuário já tem essa Uc");
-                    else
-                        model.UCs = model.UCs + "\n" + $"{aux}";
-                }
+                if(ucsUser.IndexOf(aux) != -1)
+                    return BadRequest("Usuário já tem essa Uc");
                 else
                     model.UCs = model.UCs + "\n" + $"{aux}";
             }
-            else {
-                string aux = nameUc.UC.ToUpper();
+            else
                 model.UCs = model.UCs + "\n" + $"{aux}";
-            }
+
             context.SaveChanges();
 
             return Ok("Máteria adicionada");

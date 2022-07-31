@@ -5,7 +5,7 @@ export interface course {
 }
 
 export const ECOMP: course[] = [
-    { name: 'Cálculo em uma Variável', prereqs: ["","",""], semester: 1},
+    { name: 'Cálculo em Uma Variável', prereqs: ["","",""], semester: 1},
     { name: 'Ciência, Tecnologia e Sociedade', prereqs: ["","",""], semester: 1},
     { name: 'Lógica de Programação', prereqs: ["","",""], semester: 1},
     { name: 'Química Geral', prereqs: ["","",""], semester: 1},
@@ -13,7 +13,7 @@ export const ECOMP: course[] = [
     { name: 'Fenômenos Mecânicos', prereqs: ["","",""], semester: 2},
     { name: 'Algoritmos e Estruturas de Dados I', prereqs: ["","",""], semester: 2},
     { name: 'Geometria Analítica', prereqs: ["","",""], semester: 2},
-    { name: 'Séries e Equações Diferenciais', prereqs: ["","",""], semester: 2},
+    { name: 'Séries e Equações Diferenciais Ordinárias', prereqs: ["","",""], semester: 2},
     { name: 'Matemática Discreta', prereqs: ["","",""], semester: 2},
     { name: 'Desenho Técnico Básico', prereqs: ["","",""], semester: 2},
     { name: 'Fenômenos do Contínuo', prereqs: ["","",""], semester: 3},
@@ -50,7 +50,7 @@ export const ECOMP: course[] = [
     { name: 'Cálculo Numérico', prereqs: ["","",""], semester: 8},
     { name: 'Teorias Administrativas', prereqs: ["","",""], semester: 8},
     { name: 'Programação Concorrente e Distríbuida', prereqs: ["","",""], semester: 8},
-    { name: 'Segurança da Informação', prereqs: ["","",""], semester: 8},
+    { name: 'Segurança Computacional', prereqs: ["","",""], semester: 8},
     { name: 'Redes de Computadores', prereqs: ["","",""], semester: 8},
     { name: 'Laboratório de Sistemas Computacionais: Sistemas Operacionais', prereqs: ["","",""], semester: 8},
     { name: 'Laboratório de Sistemas Computacionais: Comunicação Digital', prereqs: ["","",""], semester: 9},
@@ -88,4 +88,5 @@ export const CCOMP: course[] = [
     { name: 'Computação Gráfica', prereqs: ["","",""], semester: 6},
     { name: 'Programação Concorrente e Distríbuida', prereqs: ["","",""], semester: 6},
     { name: 'Compiladores', prereqs: ["","",""], semester: 6},
+    { name: 'Laboratório de Sistemas Computacionais: Redes de Computadores', prereqs: ["","",""], semester: 9}
 ];
