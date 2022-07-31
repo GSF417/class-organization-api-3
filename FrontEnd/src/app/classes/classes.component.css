@@ -34,3 +34,8 @@
   background-color:red;
   border-style: inset;
 }
+
+.background{
+  height:auto;
+  background-image: linear-gradient(to bottom right, rgb(18, 59, 24), rgb(164, 219, 93));
+}

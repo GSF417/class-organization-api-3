@@ -12,3 +12,8 @@
     background-color:   #1b742f;
     border: 1px solid #1b742f
 }
+
+.background{
+    height:964px;
+    background-image: linear-gradient(to bottom right, rgb(18, 59, 24), rgb(164, 219, 93));
+}
