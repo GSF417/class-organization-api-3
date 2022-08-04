@@ -1,3 +1,7 @@
+tr{
+  background-color: rgb(187, 187, 187);
+  padding-top: 20px;
+}
 .upload{
   font-weight:bold;
   background-color:#1b742f;
@@ -12,6 +16,7 @@
 .btn{
   background-color: #1b742f;
   border: #1b742f;
+  border-radius: 8px;
 }
 
 .create{
@@ -27,15 +32,18 @@
 .UC-cumprida {
   background-color:cadetblue;
   border-style: inset;
+  border-radius: 8px;
 }
 
 .UC-com-prereq {
   background-color:yellow;
   border-style: inset;
+  border-radius: 8px;
 }
 
 .UC-sem-prereq {
   background-color:red;
   border-style: inset;
+  border-radius: 8px;
 }
 

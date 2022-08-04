@@ -1,50 +1,49 @@
 .nav-link {
-    padding: 10px;
-    margin: 0 10px;
-    color: white;
-    text-decoration: none;
+  background-color: #165c25;
 
-    transition: .5s;
-    background-color: #165c25;
+  border: 1px solid #165c25;
+  border-radius: 8px;
+  color: white;
+  margin: 0 10px;
+  padding: 10px;
+  text-decoration: none;
 
-    border: 1px solid #165c25;
-    border-radius: 8px;
-
+  transition: .5s;
 }
 
-.nav-link:hover{
-    color: #FFF;
-    background-color: #0b3113;
+.nav-link:hover {
+  background-color: #0b3113;
+  color: #FFF;
 }
 
 .navbar {
-    background: rgb(187, 187, 187);
-    margin-bottom: 20px;
-    border-bottom: 3px solid rgb(136, 136, 136);
+  background: rgb(187, 187, 187);
+  border-bottom: 3px solid rgb(136, 136, 136);
+  margin-bottom: 20px;
 }
 
-.background{
-    height:auto;
-    background-image: linear-gradient(to bottom right, rgb(18, 59, 24), rgb(164, 219, 93));
-  }
+body {
+  background-image: linear-gradient(rgb(18, 59, 24), rgb(164, 219, 93),rgb(18, 59, 24));
+  height: 840px;
+}
 
-  .mat-table {
-    overflow-x: scroll;
-  }
-  
-  .mat-cell,
-  .mat-header-cell {
-    word-wrap: initial;
-    display: table-cell;
-    padding: 0px 10px;
-    line-break: unset;
-    width: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-    vertical-align: middle;
-  }
-  
-  .mat-row,
-  .mat-header-row {
-    display: table-row;
-  }
+.mat-table {
+  overflow-x: scroll;
+}
+
+.mat-cell,
+.mat-header-cell {
+  display: table-cell;
+  line-break: unset;
+  overflow: hidden;
+  padding: 0px 10px;
+  vertical-align: middle;
+  white-space: nowrap;
+  width: 100%;
+  word-wrap: initial;
+}
+
+.mat-row,
+.mat-header-row {
+  display: table-row;
+}
